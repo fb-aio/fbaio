@@ -1,37 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Facebook™ All In One</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook™ All In One</title>
 
-        <link rel="icon" href="./assets/logo-BgUNo_GL.png" />
+    <link rel="icon" href="./assets/logo-BgUNo_GL.png" />
 
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-            integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0MQRTEC81L"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0MQRTEC81L"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
 
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-            gtag('config', 'G-0MQRTEC81L');
-        </script>
-      <script type="module" crossorigin src="./assets/index-DKcwpaNn.js"></script>
-      <link rel="stylesheet" crossorigin href="./assets/index-DfqnkV-X.css">
-    </head>
+      gtag("config", "G-0MQRTEC81L");
+    </script>
 
-    <body>
-        <div id="root"></div>
-    </body>
+    <!-- firebase -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyB0RZF4QLx8ybjXSo0mwd3jcuct-CQ45qc",
+        authDomain: "fb-aio.firebaseapp.com",
+        projectId: "fb-aio",
+        storageBucket: "fb-aio.appspot.com",
+        messagingSenderId: "77035215087",
+        appId: "1:77035215087:web:f98dc90b21c7edb905e31a",
+        measurementId: "G-Y5KZ7CG5ZB",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+
+    <script type="module" crossorigin src="./assets/index-DKcwpaNn.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DfqnkV-X.css" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
