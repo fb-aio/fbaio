@@ -1,1 +1,0 @@
-import{r as i,aA as u}from"./index--trdnQFa.js";import{g as s,aa as n}from"./MyApp-BHr373cy.js";function l({target:o}){return s("About."+(o==null?void 0:o.id),null),i.useEffect(()=>{o!=null&&o.id&&n(o.id)},[o==null?void 0:o.id]),u.jsx(u.Fragment,{children:"About"})}export{l as default};
