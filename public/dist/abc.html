@@ -105,12 +105,22 @@
 
         if (!agGridInstance) {
           gridOptions = {
+            enableCellTextSelection: true,
             rowData: data,
             columnDefs: [
               { field: "i", width: 80 },
               { field: "daysLeft", pinned: "left", width: 80 },
               { field: "dateStr" },
-              { field: "uid" },
+              {
+                field: "uid",
+                cellRenderer: (params) => {
+                  const a = document.createElement("a");
+                  a.target = "_blank";
+                  a.href = `https://www.facebook.com/${params.data.uid}`;
+                  a.textContent = params.data.uid;
+                  return a;
+                },
+              },
               { field: "name", minWidth: 200, flex: 1 },
               {
                 field: "Action",
