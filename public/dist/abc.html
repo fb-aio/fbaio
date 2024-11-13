@@ -1,189 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 
     <style>
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding: 5px
-        }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+      }
 
-        #all-data-container {
-            padding-top: 20px;
-        }
+      #overview {
+        padding-top: 20px;
+      }
     </style>
-</head>
 
-<body>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+  </head>
+
+  <body>
     <h1>FB AIO</h1>
-    <label for="uid">UID</label>: <input id="uid" type="text"><br />
-    <label for="name">Name</label>: <input id="name" type="text"><br />
-    <label for="date">Date</label>: <input id="date" type="date"><br />
-    <label for="password">Password</label>: <input id="password" type="password" value=""><br />
+
+    <p>
+      <span> Preset:</span>
+      <button onclick="preset.buy()">Buy (1 month)</button>
+      <button onclick="preset.review()">Review (1 week)</button>
+    </p>
+
+    <label for="uid">UID</label>: <input id="uid" type="text" /><br />
+    <label for="name">Name</label>: <input id="name" type="text" /><br />
+    <label for="date">Date</label>: <input id="date" type="date" /><br />
+    <label for="password">Password</label>:
+    <input id="password" type="password" value="" /><br />
     <button id="submit">Submit</button>
     <button id="allData">All data</button>
 
-    <div id="all-data-container"></div>
+    <div id="overview"></div>
+
+    <div
+      id="all-data-container"
+      class="ag-theme-quartz"
+      style="height: 500px"
+    ></div>
 
     <script>
-        const inp_uid = document.getElementById("uid");
-        const inp_username = document.getElementById("name");
-        const inp_date = document.getElementById("date");
-        const inp_password = document.getElementById("password");
-        const submitBtn = document.querySelector("#submit");
-        const allDataBtn = document.querySelector("#allData");
-        const allDataContainer = document.querySelector("#all-data-container");
+      const inp_uid = document.getElementById("uid");
+      const inp_username = document.getElementById("name");
+      const inp_date = document.getElementById("date");
+      const inp_password = document.getElementById("password");
+      const submitBtn = document.querySelector("#submit");
+      const allDataBtn = document.querySelector("#allData");
+      const allDataContainer = document.querySelector("#all-data-container");
+      const overviewContainer = document.querySelector("#overview");
 
-        inp_date.setAttribute('min', new Date().toISOString().split("T")[0]);
+      inp_date.setAttribute("min", new Date().toISOString().split("T")[0]);
 
-        const nextMonth = new Date();
-        // nextMonth.setMonth(nextMonth.getMonth() + 1);
-        inp_date.setAttribute('value', nextMonth.toISOString().split("T")[0]);
+      const nextMonth = new Date();
+      // nextMonth.setMonth(nextMonth.getMonth() + 1);
+      inp_date.setAttribute("value", nextMonth.toISOString().split("T")[0]);
 
-        allDataBtn.addEventListener("click", async () => {
-            if (!inp_password.value) {
-                alert("Password is required");
-                return;
-            }
-            const url = "https://useful-script-statistic.glitch.me/allVIP?password=" + inp_password.value;
-            const res = await fetch(url);
-            const text = await res.text();
-            console.log(text)
-            const json = JSON.parse(text);
-
-            const data = json
-                .map((_, i) => ({
-                    i,
-                    daysLeft: Math.round(
-                        (new Date(parseInt(_[1])).getTime() - new Date().getTime()) /
-                        1000 /
-                        60 /
-                        60 /
-                        24
-                    ),
-                    dateStr: new Date(parseInt(_[1])).toLocaleString(),
-                    date: _[1],
-                    uid: _[0],
-                    name: _[2]
-                }))
-            // .sort((a, b) => a.daysLeft - b.daysLeft);
-            console.log(data)
-
-            allDataContainer.innerHTML = `
-            <table>
-                <tr>
-                    <th onclick="sortTable(0)">#</th>
-                    <th onclick="sortTable(1)">Days left</th>
-                    <th>Date</th>
-                    <th>UID</th>
-                    <th>Name</th>
-                    <th>Update</th>
-                </tr>
-                <tbody>
-                    ${data
-                .map((_) => `
-                <tr>
-                    <td>${_.i + 1}</td>
-                    <td>${_.daysLeft}</td>
-                    <td>${_.dateStr}</td>
-                    <td> <a target="_blank" href="https://fb.com/${_.uid}"> ${_.uid} </a></td>
-                    <td>${_.name}</td>
-                    <td>
-                        <button data-update="${_.uid};${_.name};${_.date}">Update</button>
-                </tr>`)
-                .join(" ")}
-                </tbody>
-            </table>`;
-
-        });
-
-        submitBtn.addEventListener("click", () => {
-            if (!inp_uid.value || !inp_username.value || !inp_date.value || !inp_password.value) {
-                alert("All fields are required");
-                return;
-            }
-
-            const today = new Date();
-            const selectedDate = new Date(inp_date.value);
-            selectedDate.setHours(today.getHours(), today.getMinutes(), today.getSeconds());
-
-            window.open(
-                `https://useful-script-statistic.glitch.me/addVIP?uid=${inp_uid.value}&name=${inp_username.value}&expireTime=${selectedDate.getTime()}&password=${inp_password.value}`,
-                "_blank")
-        });
-
-        document.addEventListener("click", (e) => {
-            if (e.target.dataset.update) {
-                const [uid, name, date] = e.target.dataset.update.split(";");
-                inp_uid.value = uid;
-                inp_username.value = name;
-                inp_date.value = date;
-            }
-        });
-
-        // https://www.w3schools.com/howto/howto_js_sort_table.asp
-        function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.querySelector("#all-data-container table");
-            switching = true;
-            // Set the sorting direction to ascending:
-            dir = "asc";
-            /* Make a loop that will continue until
-            no switching has been done: */
-            while (switching) {
-                // Start by saying: no switching is done:
-                switching = false;
-                rows = table.rows;
-                /* Loop through all table rows (except the
-                first, which contains table headers): */
-                for (i = 1; i < (rows.length - 1); i++) {
-                    // Start by saying there should be no switching:
-                    shouldSwitch = false;
-                    /* Get the two elements you want to compare,
-                    one from current row and one from the next: */
-                    x = rows[i].getElementsByTagName("TD")[n];
-                    y = rows[i + 1].getElementsByTagName("TD")[n];
-                    /* Check if the two rows should switch place,
-                    based on the direction, asc or desc: */
-                    if (dir == "asc") {
-                        if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
-                            // If so, mark as a switch and break the loop:
-                            shouldSwitch = true;
-                            break;
-                        }
-                    } else if (dir == "desc") {
-                        if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
-                            // If so, mark as a switch and break the loop:
-                            shouldSwitch = true;
-                            break;
-                        }
-                    }
-                }
-                if (shouldSwitch) {
-                    /* If a switch has been marked, make the switch
-                    and mark that a switch has been done: */
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                    switching = true;
-                    // Each time a switch is done, increase this count by 1:
-                    switchcount++;
-                } else {
-                    /* If no switching has been done AND the direction is "asc",
-                    set the direction to "desc" and run the while loop again. */
-                    if (switchcount == 0 && dir == "asc") {
-                        dir = "desc";
-                        switching = true;
-                    }
-                }
-            }
+      let gridOptions, agGridInstance;
+      allDataBtn.addEventListener("click", async () => {
+        if (!inp_password.value) {
+          alert("Password is required");
+          return;
         }
-    </script>
-</body>
+        const url =
+          "https://useful-script-statistic.glitch.me/allVIP?password=" +
+          inp_password.value;
+        const res = await fetch(url);
+        const text = await res.text();
+        console.log(text);
+        const json = JSON.parse(text);
 
+        const data = json.map((_, i) => ({
+          i,
+          daysLeft: Math.round(
+            (new Date(parseInt(_[1])).getTime() - new Date().getTime()) /
+              1000 /
+              60 /
+              60 /
+              24
+          ),
+          dateStr: new Date(parseInt(_[1])).toLocaleString(),
+          date: _[1],
+          uid: _[0],
+          name: _[2],
+        }));
+        // .sort((a, b) => a.daysLeft - b.daysLeft);
+        console.log(data);
+
+        overviewContainer.innerHTML = `
+            <span>Total:</span> ${data.length}
+            <br/>
+            <span>in VIP:</span> ${data.filter((d) => d.daysLeft > 0).length}
+            <br/>
+            <span>Expired:</span> ${data.filter((d) => d.daysLeft <= 0).length}
+            <br/>
+        `;
+
+        if (!agGridInstance) {
+          gridOptions = {
+            rowData: data,
+            columnDefs: [
+              { field: "i", width: 80 },
+              { field: "daysLeft", pinned: "left", width: 80 },
+              { field: "dateStr" },
+              { field: "uid" },
+              { field: "name", minWidth: 200, flex: 1 },
+              {
+                field: "Action",
+                cellRenderer: CustomButtonComponent,
+                filter: false,
+                width: 100,
+              },
+            ],
+            defaultColDef: {
+              sortable: true,
+              filter: true,
+              floatingFilter: true,
+            },
+          };
+          agGridInstance = agGrid.createGrid(allDataContainer, gridOptions);
+        } else {
+          agGridInstance.setGridOption("rowData", data);
+        }
+      });
+
+      submitBtn.addEventListener("click", () => {
+        if (
+          !inp_uid.value ||
+          !inp_username.value ||
+          !inp_date.value ||
+          !inp_password.value
+        ) {
+          alert("All fields are required");
+          return;
+        }
+
+        const today = new Date();
+        const selectedDate = new Date(inp_date.value);
+        selectedDate.setHours(
+          today.getHours(),
+          today.getMinutes(),
+          today.getSeconds()
+        );
+
+        window.open(
+          `https://useful-script-statistic.glitch.me/addVIP?uid=${
+            inp_uid.value
+          }&name=${
+            inp_username.value
+          }&expireTime=${selectedDate.getTime()}&password=${
+            inp_password.value
+          }`,
+          "_blank"
+        );
+      });
+
+      document.addEventListener("click", (e) => {
+        if (e.target.dataset.update) {
+          const [uid, name, date] = e.target.dataset.update.split(";");
+          inp_uid.value = uid;
+          inp_username.value = name;
+          inp_date.value = date;
+        }
+      });
+
+      const preset = {
+        buy() {
+          inp_uid.value = "";
+          const n = prompt("How many months?", "1");
+          inp_username.value = " (" + n + " months)";
+          // n month later from now
+          inp_date.value = new Date(
+            new Date().setMonth(new Date().getMonth() + parseInt(n))
+          )
+            .toISOString()
+            .split("T")[0];
+        },
+        review() {
+          inp_uid.value = "";
+          inp_username.value = " (review)";
+          // 7 days later from now
+          inp_date.value = new Date(
+            new Date().setDate(new Date().getDate() + 7)
+          )
+            .toISOString()
+            .split("T")[0];
+        },
+      };
+
+      let hideExpired = false;
+      function toggleExpired() {
+        const table = document.querySelector("#all-data-container table");
+        const rows = Array.from(table.rows).slice(1); // Convert rows to array and skip header row
+        rows.forEach((row) => {
+          const daysLeft = parseInt(row.cells[1].innerText);
+          if (daysLeft <= 0) {
+            row.style.display = hideExpired ? "table-row" : "none";
+          }
+        });
+        hideExpired = !hideExpired;
+      }
+
+      // https://www.w3schools.com/howto/howto_js_sort_table.asp
+      function sortTable(n) {
+        const table = document.querySelector("#all-data-container table");
+        const rows = Array.from(table.rows).slice(1); // Convert rows to array and skip header row
+
+        // Determine sorting direction
+        let dir =
+          table.getAttribute("data-sort-dir") === "asc" ? "desc" : "asc";
+        table.setAttribute("data-sort-dir", dir); // Store the current direction in a data attribute
+
+        // Sort rows based on the nth cell content
+        rows.sort((rowA, rowB) => {
+          let cellA = rowA.cells[n].innerText || rowA.cells[n].textContent;
+          let cellB = rowB.cells[n].innerText || rowB.cells[n].textContent;
+
+          // Parse as numbers if they are numeric, otherwise compare as strings
+          const valA = isNaN(cellA) ? cellA : parseFloat(cellA);
+          const valB = isNaN(cellB) ? cellB : parseFloat(cellB);
+
+          // Sort ascending or descending
+          if (dir === "asc") {
+            return valA > valB ? 1 : valA < valB ? -1 : 0;
+          } else {
+            return valA < valB ? 1 : valA > valB ? -1 : 0;
+          }
+        });
+
+        // Append sorted rows back into the table
+        rows.forEach((row) => table.appendChild(row));
+      }
+
+      class CustomButtonComponent {
+        eGui;
+        eButton;
+        eventListener;
+
+        init(params) {
+          this.eGui = document.createElement("div");
+          this.eButton = document.createElement("button");
+          this.eButton.textContent = "Update";
+          this.eventListener = () => {
+            //  copy row data to inputs
+            console.log(params);
+            inp_date.value = new Date(parseInt(params.data.date))
+              .toISOString()
+              .split("T")[0];
+            inp_uid.value = params.data.uid;
+            inp_username.value = params.data.name;
+            // scroll to top, smooth
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          };
+          this.eButton.addEventListener("click", this.eventListener);
+          this.eGui.appendChild(this.eButton);
+        }
+
+        getGui() {
+          return this.eGui;
+        }
+
+        refresh(params) {
+          return true;
+        }
+
+        destroy() {
+          if (this.eButton) {
+            this.eButton.removeEventListener("click", this.eventListener);
+          }
+        }
+      }
+    </script>
+  </body>
 </html>
