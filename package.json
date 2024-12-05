@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "prepare": "husky install",
+    "deploy": "firebase -P fb-aio deploy"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
