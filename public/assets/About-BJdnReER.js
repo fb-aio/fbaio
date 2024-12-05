@@ -1,0 +1,1 @@
+import{r as i,aA as u}from"./index-HipiUIZt.js";import{e as s,ac as n}from"./MyApp-DZdkqri-.js";function d({target:o}){return s("About."+(o==null?void 0:o.id),null),i.useEffect(()=>{o!=null&&o.id&&n(o.id)},[o==null?void 0:o.id]),u.jsx(u.Fragment,{children:"About"})}export{d as default};
