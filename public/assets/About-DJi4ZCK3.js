@@ -1,1 +1,0 @@
-import{r as i,aA as u}from"./index-Dqj9xfKN.js";import{e as s,ac as n}from"./MyApp-CD82law6.js";function d({target:o}){return s("About."+(o==null?void 0:o.id),null),i.useEffect(()=>{o!=null&&o.id&&n(o.id)},[o==null?void 0:o.id]),u.jsx(u.Fragment,{children:"About"})}export{d as default};
